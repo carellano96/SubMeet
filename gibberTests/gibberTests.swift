@@ -7,8 +7,7 @@
 //
 
 import XCTest
-@testable import gibber
-
+@testable import SubMeet
 class gibberTests: XCTestCase {
     
     override func setUp() {
