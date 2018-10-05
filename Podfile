@@ -8,6 +8,7 @@ pod 'Firebase/Storage'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
 pod ‘SwiftKeychainWrapper’
+pod 'GeoFire', '>= 1.1'
 
 
 end

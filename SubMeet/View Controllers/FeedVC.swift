@@ -10,8 +10,9 @@ import UIKit
 import Firebase
 import SwiftKeychainWrapper
 var notification = 0;
+import CoreLocation
 
-class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITabBarControllerDelegate{
+class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITabBarControllerDelegate, CLLocationManagerDelegate{
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -20,15 +21,71 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
     var imagePicker: UIImagePickerController!
     var userUID: String!
     var isRecent: Bool!
+    let manager = CLLocationManager()
+    var myLocation: CLLocationCoordinate2D!
     var delegate = UIApplication.shared.delegate as! AppDelegate
+    var isOn: Bool!
+    var Handler: DatabaseHandle?
+
     private let refreshControl = UIRefreshControl()
 
-    override func viewDidAppear(_ animated: Bool) {
-        self.tableView.reloadData()
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let updatedLocation = locations.first!
+        if self.myLocation == nil {
+            self.myLocation = updatedLocation.coordinate
+            return
+        }
+        if self.myLocation.longitude != locations.first?.coordinate.longitude && self.myLocation.latitude != locations.first?.coordinate.latitude{
+        let newCoordinate: CLLocationCoordinate2D = updatedLocation.coordinate
+        let usrDefaults:UserDefaults = UserDefaults.standard
+        
+        usrDefaults.set("\(newCoordinate.latitude)", forKey: "current_latitude")
+        usrDefaults.set("\(newCoordinate.longitude)", forKey: "current_longitude")
+        usrDefaults.synchronize()
         print("The username of this user is: \(delegate.username)")
         print("The userIMG of this user is:\(delegate.userImg)")
+        let longitude = Double(UserDefaults.standard.string(forKey: "current_longitude")!)
+        let latitude = Double(UserDefaults.standard.string(forKey: "current_latitude")!)
+        if (longitude != nil && latitude != nil){
+            myLocation = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+            print("My location is: ,", myLocation.latitude)
+        }
+        }
         
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let testIsOn = UserDefaults.standard.string(forKey: "isOn")
+        if testIsOn == nil {
+            isOn = true
+        }
+        else{
+            isOn = Bool(testIsOn!)
+        }
+    }
+    
+
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("i appeared!")
+        retrieveData()
+        self.tableView.reloadData()
+
+    }
+    private func configureLocationManager(){
         
+        if #available(iOS 9.0, *) {
+            manager.allowsBackgroundLocationUpdates = true
+        } else {
+            // Fallback on earlier versions
+        }
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.distanceFilter = kCLDistanceFilterNone
+        manager.pausesLocationUpdatesAutomatically = false
+        manager.delegate = self
+        manager.requestWhenInUseAuthorization()
     }
     
     @IBAction func segmentedClicked(_ sender: Any){
@@ -53,7 +110,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
     func CheckforMessages(){
                     //store connect key to check if there are messages for key
                    let MessageRef = Database.database().reference().child("chats")
-                MessageRef.observe(.value, with: {(snapshot) in
+        MessageRef.observeSingleEvent(of: .value, with: {(snapshot) in
                         //if theres a child added
                     if let messages = snapshot.children.allObjects as? [DataSnapshot]{
                         //each convo
@@ -79,26 +136,50 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                     })
                 }
 
-    override func viewDidLoad() {
-        self.tableView.reloadData()
-        super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        self.tabBarController?.delegate = self
-        imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        isRecent = true
-        // Do any additional setup after loading the view.
-        Database.database().reference().child("posts").observe(.value, with: {
+
+    func retrieveData(){
+        let postRef = Database.database().reference().child("posts")
+        postRef.observe(.value, with: {
             (snapshot) in
             if let snapshot = snapshot.children.allObjects as? [DataSnapshot]{
                 self.posts.removeAll()
+                let radius = UserDefaults.standard.string(forKey: "sliderValue")
+                let isOn = Bool(self.isOn)
                 for data in snapshot {
                     if let postData = data.value as? Dictionary<String, AnyObject>{
                         let postKey = data.key
                         print("data key is \(postKey)")
                         let post = Post(postKey: postKey, postData: postData)
-                        self.posts.append(post)
+                        print("isOn: \(isOn) and radius = \(radius)")
+                        if !isOn && radius != nil {
+                            print("will compare radius")
+                            postRef.child(postKey).child("location").observeSingleEvent(of: .value, with: {(snapshot) in
+                                if let locationData = snapshot.value as? Dictionary<String, AnyObject>{
+                                    let longitude = locationData["longitude"] as? Double
+                                    let latitude = locationData["latitude"] as? Double
+                                    print("longitude is ", longitude)
+                                    print("latitude is ", latitude)
+                                    let postLocation = CLLocation(latitude: latitude!, longitude: longitude!)//
+                                    print(self.myLocation.latitude)
+                                    let myLocation = CLLocation(latitude: self.myLocation.latitude, longitude: self.myLocation.longitude)
+                                   let radiusFloat = Float(radius!)
+                                    print("radiusFloat,", radiusFloat)
+                                    
+                                    if self.compareRadius(radius: Int(radiusFloat!), userLocation: myLocation, postLocation: postLocation){
+                                        //if its true then add it
+                                        self.posts.append(post)
+                                    }
+                                }
+                            
+                            })
+                            
+                            
+                            
+                            
+                        }
+                        else{
+                            self.posts.append(post)
+                        }
                         print(self.posts.count," count!")
                     }
                 }
@@ -110,6 +191,38 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                 self.posts = self.posts.sorted(by: { $0.likes > $1.likes})
             }
         })
+    }
+    
+    
+    
+    func compareRadius(radius: Int, userLocation: CLLocation, postLocation: CLLocation) -> Bool{
+        print("here?")
+        let distance = userLocation.distance(from: postLocation)
+        let distanceInMiles = Int(distance/1609.344)
+        print("distance in Miles from this is", distanceInMiles)
+        print("radius in Miles from this is", radius)
+
+        if distanceInMiles > radius {
+            return false
+        }
+        return true
+        
+    }
+    
+    override func viewDidLoad() {
+        self.tableView.reloadData()
+        super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
+        self.tabBarController?.delegate = self
+        imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        isRecent = true
+        self.configureLocationManager()
+        self.manager.startUpdatingLocation()
+
+        // Do any additional setup after loading the view.
+        retrieveData()
         userUID = KeychainWrapper.standard.string(forKey: "uid")
         self.CheckforMessages()
         refreshControl.addTarget(self, action: #selector(fetchMessages(_sender:)), for: .valueChanged)
@@ -135,7 +248,6 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
 
     }
     private func refreshMessages(){
-        self.tableView.reloadData()
         
     }
     
@@ -189,6 +301,11 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
             
         })
         
+    }
+    
+    @IBAction func returnToFeed(_ sender: UIStoryboardSegue){
+        retrieveData()
+        self.tableView.reloadData()
     }
     
     

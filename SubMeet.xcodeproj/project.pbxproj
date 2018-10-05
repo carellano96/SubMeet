@@ -18,6 +18,7 @@
 		07163B982160309300FE2EF9 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07163B972160309300FE2EF9 /* MessageCell.swift */; };
 		07163B9A216031BD00FE2EF9 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07163B99216031BD00FE2EF9 /* MessageView.swift */; };
 		07163B9C2162846C00FE2EF9 /* CellNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07163B9B2162846C00FE2EF9 /* CellNotificationView.swift */; };
+		074322C12167E3D200EEDB23 /* FilterTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074322C02167E3D200EEDB23 /* FilterTVC.swift */; };
 		075033502150082600AA6077 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0750334F2150082600AA6077 /* SignUpVC.swift */; };
 		0750335221500B9C00AA6077 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0750335121500B9C00AA6077 /* FeedVC.swift */; };
 		07664059215551DC003A075F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07664058215551DC003A075F /* Post.swift */; };
@@ -68,6 +69,7 @@
 		07163B972160309300FE2EF9 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		07163B99216031BD00FE2EF9 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		07163B9B2162846C00FE2EF9 /* CellNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellNotificationView.swift; sourceTree = "<group>"; };
+		074322C02167E3D200EEDB23 /* FilterTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTVC.swift; sourceTree = "<group>"; };
 		0750334F2150082600AA6077 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		0750335121500B9C00AA6077 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		07664058215551DC003A075F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				07163B9321601BC500FE2EF9 /* MessageVC.swift */,
+				074322C02167E3D200EEDB23 /* FilterTVC.swift */,
 				0766405C2159552E003A075F /* ComposeVC.swift */,
 				07163B8C215FF4F900FE2EF9 /* ConnectVC.swift */,
 				07163B80215C372A00FE2EF9 /* UserVC.swift */,
@@ -313,6 +316,11 @@
 				TargetAttributes = {
 					0768AC51214A0CDE004E1B57 = {
 						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					0768AC65214A0CE2004E1B57 = {
 						CreatedOnToolsVersion = 9.4.1;
@@ -384,6 +392,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GeoFire/GeoFire.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -392,6 +401,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GeoFire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftKeychainWrapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -442,6 +452,7 @@
 				07163B9A216031BD00FE2EF9 /* MessageView.swift in Sources */,
 				0766405F215C2D62003A075F /* RoundedButton.swift in Sources */,
 				0768ACCC214ADB70004E1B57 /* LoginViewController.swift in Sources */,
+				074322C12167E3D200EEDB23 /* FilterTVC.swift in Sources */,
 				07163B87215F3C2800FE2EF9 /* UserInfoCell.swift in Sources */,
 				0789254021520C66004D02F1 /* UserProfile.swift in Sources */,
 				075033502150082600AA6077 /* SignUpVC.swift in Sources */,

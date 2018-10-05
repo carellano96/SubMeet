@@ -9,15 +9,26 @@
 import UIKit
 import Firebase
 import SwiftKeychainWrapper
+import CoreLocation
+import GeoFire
 
-class ComposeVC: UIViewController, UITextViewDelegate {
+class ComposeVC: UIViewController, UITextViewDelegate, CLLocationManagerDelegate {
     @IBOutlet weak var SubmitButton: UIButton!
     @IBOutlet weak var ComposeTextField: UITextView!
+    var locationManager: CLLocationManager!
+    var locValue: CLLocationCoordinate2D!
+    var geoFire: GeoFire!
     override func viewDidLoad() {
         super.viewDidLoad()
         ComposeTextField.delegate = self
         ComposeTextField.returnKeyType = UIReturnKeyType.done
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
     }
+    
+    
+    
 
     
 
@@ -60,6 +71,16 @@ class ComposeVC: UIViewController, UITextViewDelegate {
             
             let firebasePost = Database.database().reference().child("posts").childByAutoId()
             firebasePost.setValue(post)
+            let postKey = firebasePost.key
+            
+            let geoReference = Database.database().reference().child("posts").child(postKey).child("location")
+            let longitude = Double(UserDefaults.standard.string(forKey: "current_longitude")!)
+            let latitude = Double(UserDefaults.standard.string(forKey: "current_latitude")!)
+                let location: Dictionary<String, AnyObject> = [
+                    "longitude": longitude as AnyObject,
+                    "latitude": latitude as AnyObject]
+                geoReference.setValue(location)
+            
             }
             
         })

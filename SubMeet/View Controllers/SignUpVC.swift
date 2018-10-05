@@ -11,8 +11,9 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import SwiftKeychainWrapper
+import CoreLocation
 
-class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     @IBOutlet weak var UserImage: UIImageView!
     @IBOutlet weak var UsernameField: UITextField!
     @IBOutlet weak var EmailField: UITextField!
@@ -31,6 +32,10 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         imagePicker.allowsEditing = true
         // Do any additional setup after loading the view.
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
 
     @IBAction func cancel(_ sender: Any){
         dismiss(animated: true, completion: nil)
@@ -42,6 +47,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     func keychain(){
         KeychainWrapper.standard.set(userUID, forKey: "uid")
     }
+    
     @IBAction func SignUpButton(_ sender: Any) {
         if (UsernameField.text != "" && PasswordField.text != "" && PasswordField.text == RepPasswordField.text && imageSelected){
         Auth.auth().createUser(withEmail: EmailField.text!, password: PasswordField.text!, completion: { (user, error) in
@@ -54,12 +60,14 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                 self.username = self.UsernameField.text
                 self.uploadImg(image: self.UserImage)
                     //img function
-                    self.keychain()
                 self.UsernameField.text = ""
                 self.PasswordField.text = ""
                 self.RepPasswordField.text = ""
                 self.EmailField.text = ""
                 self.UserImage.image = UIImage(named: "pencil")
+
+                self.keychain()
+
                 self.performSegue(withIdentifier: "toFeedVC", sender: nil)  }
                 
             }
@@ -83,6 +91,9 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+
     
     func createAlert(title:String, message:String){
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
