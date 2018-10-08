@@ -179,6 +179,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                         }
                         else{
                             self.posts.append(post)
+                            print(post.userPost)
                         }
                         print(self.posts.count," count!")
                     }
@@ -248,7 +249,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
 
     }
     private func refreshMessages(){
-        
+        retrieveData()
     }
     
 

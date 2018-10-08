@@ -20,13 +20,9 @@ class UserVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let UserMenu = ["My Posts","My Connects"]
     var userImg: String = ""
     var username: String = ""
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        userImg = delegate.userImg
-        username  = delegate.username
-        tableView.delegate = self
-        tableView.dataSource = self
-        
+    private let refreshControl = UIRefreshControl()
+
+    func retrieveData(){
         Database.database().reference().child("posts").observe(.value, with: {
             (snapshot) in
             if let snapshot = snapshot.children.allObjects as? [DataSnapshot]{
@@ -49,9 +45,40 @@ class UserVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.tableView.reloadData()
         })
         
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        userImg = delegate.userImg
+        username  = delegate.username
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        refreshControl.addTarget(self, action: #selector(fetchMessages(_sender:)), for: .valueChanged)
+        let backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
+        let refreshColor = #colorLiteral(red: 1, green: 0.4932718873, blue: 0.4739984274, alpha: 1)
+        refreshControl.tintColor = refreshColor
+        refreshControl.backgroundColor = backgroundColor
+        if #available(iOS 10.0, *){
+            tableView.refreshControl = refreshControl
+        }
+        else{
+            tableView.addSubview(refreshControl)
+        }
+        retrieveData()
+        
+
+        
         // Do any additional setup after loading the view.
     }
     
+    @objc private func fetchMessages(_sender: Any) {
+        refreshMessages()
+        refreshControl.endRefreshing()
+        
+    }
+    private func refreshMessages(){
+        retrieveData()
+    }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
     }
@@ -78,7 +105,7 @@ class UserVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "UserInfoCell") as? UserInfoCell{
             print("configuring usercell")
-            cell.configureCell(username: username, userImg: userImg)
+            cell.configureCell(username: delegate.username, userImg: delegate.userImg)
             return cell
             }
         }

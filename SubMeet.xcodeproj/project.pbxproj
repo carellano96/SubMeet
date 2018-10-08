@@ -37,6 +37,9 @@
 		0768AC8C214A205C004E1B57 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0768AC89214A204D004E1B57 /* GoogleService-Info.plist */; };
 		0768ACCC214ADB70004E1B57 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0768ACCB214ADB70004E1B57 /* LoginViewController.swift */; };
 		0789254021520C66004D02F1 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0789253F21520C66004D02F1 /* UserProfile.swift */; };
+		07D0606F216BAD5C0073CC46 /* ChangeCredentialsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0606E216BAD5C0073CC46 /* ChangeCredentialsTVC.swift */; };
+		07D06071216BB4820073CC46 /* SettingsTWC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06070216BB4820073CC46 /* SettingsTWC.swift */; };
+		07D06073216C042B0073CC46 /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */; };
 		85F19192F7D57B7A5471DBED /* Pods_SubMeet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2D3B646CC993505526B2DB3 /* Pods_SubMeet.framework */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +95,9 @@
 		0768AC89214A204D004E1B57 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0768ACCB214ADB70004E1B57 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0789253F21520C66004D02F1 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		07D0606E216BAD5C0073CC46 /* ChangeCredentialsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeCredentialsTVC.swift; sourceTree = "<group>"; };
+		07D06070216BB4820073CC46 /* SettingsTWC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTWC.swift; sourceTree = "<group>"; };
+		07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
 		D2D3B646CC993505526B2DB3 /* Pods_SubMeet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SubMeet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4659CB8A4964F6E82535613 /* Pods-SubMeet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SubMeet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet.debug.xcconfig"; sourceTree = "<group>"; };
 		FC440038B6F64E0DC33ECDA3 /* Pods-SubMeet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SubMeet.release.xcconfig"; path = "Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet.release.xcconfig"; sourceTree = "<group>"; };
@@ -139,12 +145,15 @@
 			children = (
 				07163B9321601BC500FE2EF9 /* MessageVC.swift */,
 				074322C02167E3D200EEDB23 /* FilterTVC.swift */,
+				07D0606E216BAD5C0073CC46 /* ChangeCredentialsTVC.swift */,
+				07D06070216BB4820073CC46 /* SettingsTWC.swift */,
 				0766405C2159552E003A075F /* ComposeVC.swift */,
 				07163B8C215FF4F900FE2EF9 /* ConnectVC.swift */,
 				07163B80215C372A00FE2EF9 /* UserVC.swift */,
 				0768ACCB214ADB70004E1B57 /* LoginViewController.swift */,
 				0750334F2150082600AA6077 /* SignUpVC.swift */,
 				0750335121500B9C00AA6077 /* FeedVC.swift */,
+				07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */,
 				07163B82215DC48B00FE2EF9 /* TabBarController.swift */,
 			);
 			path = "View Controllers";
@@ -437,6 +446,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07D06071216BB4820073CC46 /* SettingsTWC.swift in Sources */,
 				0766405B215566C1003A075F /* PostCell.swift in Sources */,
 				07163B81215C372A00FE2EF9 /* UserVC.swift in Sources */,
 				07163B89215FEEE200FE2EF9 /* ConnectCell.swift in Sources */,
@@ -445,10 +455,12 @@
 				07163B8B215FEF9200FE2EF9 /* Connect.swift in Sources */,
 				0766405D2159552E003A075F /* ComposeVC.swift in Sources */,
 				07163B8D215FF4F900FE2EF9 /* ConnectVC.swift in Sources */,
+				07D0606F216BAD5C0073CC46 /* ChangeCredentialsTVC.swift in Sources */,
 				0750335221500B9C00AA6077 /* FeedVC.swift in Sources */,
 				07163B9421601BC500FE2EF9 /* MessageVC.swift in Sources */,
 				07664059215551DC003A075F /* Post.swift in Sources */,
 				07163B9C2162846C00FE2EF9 /* CellNotificationView.swift in Sources */,
+				07D06073216C042B0073CC46 /* ForgotPasswordVC.swift in Sources */,
 				07163B9A216031BD00FE2EF9 /* MessageView.swift in Sources */,
 				0766405F215C2D62003A075F /* RoundedButton.swift in Sources */,
 				0768ACCC214ADB70004E1B57 /* LoginViewController.swift in Sources */,

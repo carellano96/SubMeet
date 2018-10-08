@@ -35,7 +35,47 @@ class PostCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    
+    func getUserImageURL(userUID: String) {
+        var url = ""
+        print("userUID",userUID)
+        
+        let imageRef = Database.database().reference().child("users").child(userUID)
+        imageRef.observeSingleEvent(of: .value, with: {(snapshot) in
+            if let data = snapshot.value as? Dictionary< String, AnyObject>{
+                url = (data["userImg"] as? String)!
+                let ref = Storage.storage().reference(forURL: url)
+                ref.getData(maxSize: 100000000, completion:{ (data,error) in
+                    
+                    print("are we here ")
+                    if (error != nil){
+                        print("cell configuring")
+                        print("couldn't get user img because !",error?.localizedDescription)
+                    }
+                    else{
+                        
+                        if let imgData = data {
+                            
+                            if let image = UIImage(data: imgData){
+                                
+                                self.userImg.image = image
+                                print("cell configured!")
+                            }
+                        }
+                    }
+                    
+                })
+            }
+            
+            
+        })
+        
+        
+        if url == ""{
+            print("yikess")
+            
+        }
+        
+    }
     
     
     func configCell(post: Post, userImg: UIImage? = nil){
@@ -44,6 +84,7 @@ class PostCell: UITableViewCell {
         self.likesLabel.text = "\(post.likes)"
         self.username.text = "\(post.username)"
         self.userPost.text = "\(post.userPost)"
+        print(post.userPost)
         //convert Date() to string and get time display rextension
         let dateInString = post.datePosted
         let dateFormatter = DateFormatter()
@@ -59,27 +100,11 @@ class PostCell: UITableViewCell {
             self.userImg.image = userImg
         }else{
             //
-            let ref = Storage.storage().reference(forURL: post.userImg)
-            ref.getData(maxSize: 100000000, completion:{ (data,error) in
-                
-                print("are we here ")
-                if (error != nil){
-                    print("cell configuring")
-                    print("couldn't get user img because !",error?.localizedDescription)
-                }
-                else{
-                    
-                    if let imgData = data {
-                        
-                        if let image = UIImage(data: imgData){
-                            
-                            self.userImg.image = image
-                            print("cell configured!")
-                        }
-                    }
-                }
-                
-            })
+        
+            //getuserImageURL
+            getUserImageURL(userUID: post.userID)
+            
+            
         }
         let likeRef: DatabaseReference? = Database.database().reference().child("users").child(currentUser!).child("likes").child(post.postKey)
         let userID = KeychainWrapper.standard.string(forKey: "uid")
