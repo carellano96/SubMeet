@@ -139,7 +139,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
 
     func retrieveData(){
         let postRef = Database.database().reference().child("posts")
-        postRef.observe(.value, with: {
+        postRef.observeSingleEvent(of: .value, with: {
             (snapshot) in
             if let snapshot = snapshot.children.allObjects as? [DataSnapshot]{
                 self.posts.removeAll()
@@ -150,6 +150,21 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                         let postKey = data.key
                         print("data key is \(postKey)")
                         let post = Post(postKey: postKey, postData: postData)
+                        if let commentData = postData["comments"] as? Dictionary<String, AnyObject>{
+                            for comment in commentData{
+                                //create the comment
+                                let commentKey = comment.key
+                                if let commentDict = comment.value as? Dictionary<String, AnyObject>{
+                                    let CurrentComment = Comment(commentData: commentDict, commentKey: commentKey)
+                                    post.comments.append(CurrentComment)
+                                        print("Congrats!")
+                                        print(CurrentComment.comment)
+                                    
+                                }
+                                
+                            }
+                        }
+
                         print("isOn: \(isOn) and radius = \(radius)")
                         if !isOn && radius != nil {
                             print("will compare radius")
@@ -321,3 +336,5 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
 
 
 }
+
+//create an IBAction that sends the comments to the viewcontroller, prepareforsegue relevant comment information

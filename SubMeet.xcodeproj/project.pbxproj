@@ -40,6 +40,7 @@
 		07D0606F216BAD5C0073CC46 /* ChangeCredentialsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D0606E216BAD5C0073CC46 /* ChangeCredentialsTVC.swift */; };
 		07D06071216BB4820073CC46 /* SettingsTWC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06070216BB4820073CC46 /* SettingsTWC.swift */; };
 		07D06073216C042B0073CC46 /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */; };
+		07D06075216D08AE0073CC46 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06074216D08AE0073CC46 /* Comment.swift */; };
 		85F19192F7D57B7A5471DBED /* Pods_SubMeet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2D3B646CC993505526B2DB3 /* Pods_SubMeet.framework */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +99,7 @@
 		07D0606E216BAD5C0073CC46 /* ChangeCredentialsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeCredentialsTVC.swift; sourceTree = "<group>"; };
 		07D06070216BB4820073CC46 /* SettingsTWC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTWC.swift; sourceTree = "<group>"; };
 		07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
+		07D06074216D08AE0073CC46 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		D2D3B646CC993505526B2DB3 /* Pods_SubMeet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SubMeet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4659CB8A4964F6E82535613 /* Pods-SubMeet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SubMeet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet.debug.xcconfig"; sourceTree = "<group>"; };
 		FC440038B6F64E0DC33ECDA3 /* Pods-SubMeet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SubMeet.release.xcconfig"; path = "Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet.release.xcconfig"; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				07664058215551DC003A075F /* Post.swift */,
+				07D06074216D08AE0073CC46 /* Comment.swift */,
 				07163B8A215FEF9200FE2EF9 /* Connect.swift */,
 				07163B9521602D8400FE2EF9 /* Message.swift */,
 			);
@@ -446,6 +449,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07D06075216D08AE0073CC46 /* Comment.swift in Sources */,
 				07D06071216BB4820073CC46 /* SettingsTWC.swift in Sources */,
 				0766405B215566C1003A075F /* PostCell.swift in Sources */,
 				07163B81215C372A00FE2EF9 /* UserVC.swift in Sources */,

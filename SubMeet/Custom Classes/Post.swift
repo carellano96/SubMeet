@@ -21,6 +21,7 @@ class Post{
     private var _userID: String!
     private var _datePosted: String!
     private var _date: Date!
+    private var _comments: [Comment]
     
     
     var datePosted: String{
@@ -67,13 +68,23 @@ class Post{
         }
     }
     
+    var comments: [Comment]{
+        get{
+            return _comments
+        }
+        set{
+            _comments = newValue
+        }
+    }
     
     
-    init(likes: Int, userPost: String, userImg: String, userID: String){
+    
+    init(likes: Int, userPost: String, userImg: String, userID: String, comments: [Comment]){
         _likes = likes
         _userPost = userPost
         _userImg = userImg
         _userID = userID
+        _comments = comments
     }
     
     init(postKey: String, postData: Dictionary<String, AnyObject>){
@@ -102,12 +113,12 @@ class Post{
         }
         
         let dateFormatter = DateFormatter()
-        if let datePosted = datePosted as? String {
+        if let datePosted = _datePosted as? String {
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssxxxxx"
-            date = dateFormatter.date(from: datePosted)!
+            _date = dateFormatter.date(from: datePosted)!
         }
         _postRef = Database.database().reference().child("posts").child(_PostKey)
-        
+        _comments = []
         
     }
     

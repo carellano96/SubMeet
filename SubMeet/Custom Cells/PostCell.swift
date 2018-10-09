@@ -17,6 +17,7 @@ class PostCell: UITableViewCell {
     @IBOutlet weak var likesLabel: UILabel!
     @IBOutlet weak var ConnectButton: UIButton!
     @IBOutlet weak var datePosted: UILabel!
+    @IBOutlet weak var CommentsLabel: UILabel!
     
     
     var post: Post!
@@ -84,6 +85,7 @@ class PostCell: UITableViewCell {
         self.likesLabel.text = "\(post.likes)"
         self.username.text = "\(post.username)"
         self.userPost.text = "\(post.userPost)"
+        self.CommentsLabel.text = "\(self.post.comments.count)"
         print(post.userPost)
         //convert Date() to string and get time display rextension
         let dateInString = post.datePosted
