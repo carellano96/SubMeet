@@ -17,9 +17,11 @@ class ConnectVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var connect: Connect!
     var connectKey: String!
     var ChosenUser: String!
+    var ChosenUserID: String!
     var currentUser: String!
     var alreadyReloaded: Bool!
     var previousNotificationNumber = 0
+    var NoInternet: NoInternetConnection!
     private let refreshControl = UIRefreshControl()
     var highestMessageNum = 0
     @IBOutlet weak var tableView: UITableView!
@@ -29,10 +31,11 @@ class ConnectVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         alreadyReloaded = false
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        NoInternet = NoInternetConnection()
         currentUser = KeychainWrapper.standard.string(forKey: "uid")
         let connectsRef = Database.database().reference().child("users").child(currentUser!).child("connects")
         
-        connectsRef.observe(.value, with: {(snapshot) in
+        connectsRef.observeSingleEvent(of: .value, with: {(snapshot) in
             if let snapshot = snapshot.children.allObjects as? [DataSnapshot] {
                 self.connects.removeAll()
                 print("removing all the connects and adding them again!")
@@ -75,8 +78,31 @@ class ConnectVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     private func refreshMessages(){
         self.tableView.reloadData()
-        refreshControl.endRefreshing()
+        checkForInternet(){(success) -> Void in
+            if success{
+                refreshControl.endRefreshing()
+            }
+            
+        }
 
+    }
+    
+    
+    func checkForInternet( completion: (_ success: Bool) -> Void){
+        if !Reachability.Connection(){
+            NoInternet.configView(width: self.view.frame.width - 10, center: self.view.center, top: self.view.frame.minY - 40)
+            
+            
+            self.view.addSubview(NoInternet)
+            
+        }
+        else{
+            if self.view.subviews.contains(NoInternet){
+                NoInternet.removeView()
+            }
+        }
+        completion(true)
+        
     }
     
     func CheckforMessages(cell: ConnectCell){
@@ -154,6 +180,27 @@ class ConnectVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         {
             cell.configCell(connect: connect)
             print("connect notification is:", connect.connectNotification)
+            Database.database().reference().child("users").child(connect.userID).child("userImg").observeSingleEvent(of: .value, with: {(snapshot) in
+                if snapshot.exists(){
+                    if let imgURL = snapshot.value as? String {
+                        let connectImgRef = Storage.storage().reference(forURL: imgURL)
+                        connectImgRef.getData(maxSize: 100000000, completion: {(data, error) in
+                            if error != nil {
+                                print("couldn't retrieve image!", error?.localizedDescription)
+                            }
+                            else {
+                                if let imgData = data {
+                                    let image = UIImage(data: imgData)
+                                    cell.ConnectImage.image = image
+                                }
+                            }
+                        })
+                        
+                    }
+                    
+                    
+                }
+            })
             self.CheckforMessages(cell: cell)
             return cell
         }
@@ -171,6 +218,7 @@ class ConnectVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             cell.connect.connectNotification = "0"
             connectKey = cell.connect.connectKey
             ChosenUser = cell.connect.username
+            ChosenUserID = cell.connect.userID
             performSegue(withIdentifier: "toMessages", sender: nil)
         }
     }
@@ -185,6 +233,7 @@ class ConnectVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if let MessagesVC = segue.destination as? MessageVC{
             MessagesVC.connectKey = self.connectKey
             MessagesVC.title = ChosenUser
+            MessagesVC.userChosenID = ChosenUserID
         }
         
     }

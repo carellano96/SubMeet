@@ -10,7 +10,9 @@ import UIKit
 
 class UserProfile: UIImageView {
     
-    
+    var username: String!
+    var userID: String!
+    var imageURL: String!
     override func awakeFromNib() {
         super.awakeFromNib()
         self.layer.cornerRadius = self.frame.size.width/2

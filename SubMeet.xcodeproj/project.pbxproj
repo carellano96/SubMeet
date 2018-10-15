@@ -18,7 +18,11 @@
 		07163B982160309300FE2EF9 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07163B972160309300FE2EF9 /* MessageCell.swift */; };
 		07163B9A216031BD00FE2EF9 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07163B99216031BD00FE2EF9 /* MessageView.swift */; };
 		07163B9C2162846C00FE2EF9 /* CellNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07163B9B2162846C00FE2EF9 /* CellNotificationView.swift */; };
+		07190539217392520016FC03 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07190538217392520016FC03 /* Reachability.swift */; };
+		0719053B21739A290016FC03 /* NoInternetConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0719053A21739A290016FC03 /* NoInternetConnection.swift */; };
 		074322C12167E3D200EEDB23 /* FilterTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074322C02167E3D200EEDB23 /* FilterTVC.swift */; };
+		0744B4F6216D760F001A6C87 /* CommentsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0744B4F5216D760F001A6C87 /* CommentsVC.swift */; };
+		0744B4F8216D7793001A6C87 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0744B4F7216D7793001A6C87 /* CommentCell.swift */; };
 		075033502150082600AA6077 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0750334F2150082600AA6077 /* SignUpVC.swift */; };
 		0750335221500B9C00AA6077 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0750335121500B9C00AA6077 /* FeedVC.swift */; };
 		07664059215551DC003A075F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07664058215551DC003A075F /* Post.swift */; };
@@ -73,7 +77,11 @@
 		07163B972160309300FE2EF9 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		07163B99216031BD00FE2EF9 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		07163B9B2162846C00FE2EF9 /* CellNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellNotificationView.swift; sourceTree = "<group>"; };
+		07190538217392520016FC03 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		0719053A21739A290016FC03 /* NoInternetConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoInternetConnection.swift; sourceTree = "<group>"; };
 		074322C02167E3D200EEDB23 /* FilterTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTVC.swift; sourceTree = "<group>"; };
+		0744B4F5216D760F001A6C87 /* CommentsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsVC.swift; sourceTree = "<group>"; };
+		0744B4F7216D7793001A6C87 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		0750334F2150082600AA6077 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		0750335121500B9C00AA6077 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		07664058215551DC003A075F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -135,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				0766405A215566C1003A075F /* PostCell.swift */,
+				0744B4F7216D7793001A6C87 /* CommentCell.swift */,
 				07163B88215FEEE200FE2EF9 /* ConnectCell.swift */,
 				07163B86215F3C2800FE2EF9 /* UserInfoCell.swift */,
 				07163B972160309300FE2EF9 /* MessageCell.swift */,
@@ -151,9 +160,10 @@
 				07D06070216BB4820073CC46 /* SettingsTWC.swift */,
 				0766405C2159552E003A075F /* ComposeVC.swift */,
 				07163B8C215FF4F900FE2EF9 /* ConnectVC.swift */,
-				07163B80215C372A00FE2EF9 /* UserVC.swift */,
+				0744B4F5216D760F001A6C87 /* CommentsVC.swift */,
 				0768ACCB214ADB70004E1B57 /* LoginViewController.swift */,
 				0750334F2150082600AA6077 /* SignUpVC.swift */,
+				07163B80215C372A00FE2EF9 /* UserVC.swift */,
 				0750335121500B9C00AA6077 /* FeedVC.swift */,
 				07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */,
 				07163B82215DC48B00FE2EF9 /* TabBarController.swift */,
@@ -166,6 +176,7 @@
 			children = (
 				07664058215551DC003A075F /* Post.swift */,
 				07D06074216D08AE0073CC46 /* Comment.swift */,
+				07190538217392520016FC03 /* Reachability.swift */,
 				07163B8A215FEF9200FE2EF9 /* Connect.swift */,
 				07163B9521602D8400FE2EF9 /* Message.swift */,
 			);
@@ -233,6 +244,7 @@
 		0768ACCD214AF8A5004E1B57 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0719053A21739A290016FC03 /* NoInternetConnection.swift */,
 				0766405E215C2D62003A075F /* RoundedButton.swift */,
 				0789253F21520C66004D02F1 /* UserProfile.swift */,
 				07163B99216031BD00FE2EF9 /* MessageView.swift */,
@@ -453,6 +465,7 @@
 				07D06071216BB4820073CC46 /* SettingsTWC.swift in Sources */,
 				0766405B215566C1003A075F /* PostCell.swift in Sources */,
 				07163B81215C372A00FE2EF9 /* UserVC.swift in Sources */,
+				0719053B21739A290016FC03 /* NoInternetConnection.swift in Sources */,
 				07163B89215FEEE200FE2EF9 /* ConnectCell.swift in Sources */,
 				07163B9621602D8400FE2EF9 /* Message.swift in Sources */,
 				07163B83215DC48B00FE2EF9 /* TabBarController.swift in Sources */,
@@ -463,6 +476,7 @@
 				0750335221500B9C00AA6077 /* FeedVC.swift in Sources */,
 				07163B9421601BC500FE2EF9 /* MessageVC.swift in Sources */,
 				07664059215551DC003A075F /* Post.swift in Sources */,
+				07190539217392520016FC03 /* Reachability.swift in Sources */,
 				07163B9C2162846C00FE2EF9 /* CellNotificationView.swift in Sources */,
 				07D06073216C042B0073CC46 /* ForgotPasswordVC.swift in Sources */,
 				07163B9A216031BD00FE2EF9 /* MessageView.swift in Sources */,
@@ -474,6 +488,8 @@
 				075033502150082600AA6077 /* SignUpVC.swift in Sources */,
 				0768AC56214A0CDE004E1B57 /* AppDelegate.swift in Sources */,
 				07163B982160309300FE2EF9 /* MessageCell.swift in Sources */,
+				0744B4F6216D760F001A6C87 /* CommentsVC.swift in Sources */,
+				0744B4F8216D7793001A6C87 /* CommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

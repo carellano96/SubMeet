@@ -12,12 +12,17 @@ import SwiftKeychainWrapper
 
 class PostCell: UITableViewCell {
     @IBOutlet weak var username: UILabel!
-    @IBOutlet weak var userImg: UIImageView!
+    @IBOutlet weak var userImg: UserProfile!
     @IBOutlet weak var userPost: UILabel!
     @IBOutlet weak var likesLabel: UILabel!
     @IBOutlet weak var ConnectButton: UIButton!
     @IBOutlet weak var datePosted: UILabel!
     @IBOutlet weak var CommentsLabel: UILabel!
+    @IBOutlet weak var CommentButton: UIButton!
+    @IBOutlet weak var LikeButton: UIButton!
+    @IBOutlet weak var ProfileButton: UIButton!
+    @IBOutlet weak var MoreOptions: UIButton!
+    @IBOutlet weak var PostView: UIView!
     
     
     var post: Post!
@@ -28,6 +33,11 @@ class PostCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        PostView.layer.shadowColor = UIColor.lightGray.cgColor
+        PostView.layer.shadowOpacity = 1
+        PostView.layer.shadowOffset = CGSize.zero
+        PostView.layer.shadowRadius = 2
+        userPost.numberOfLines = 0
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -36,20 +46,28 @@ class PostCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    
+    let imageCache = NSCache<AnyObject, AnyObject>()
     func getUserImageURL(userUID: String) {
         var url = ""
-        print("userUID",userUID)
         
         let imageRef = Database.database().reference().child("users").child(userUID)
         imageRef.observeSingleEvent(of: .value, with: {(snapshot) in
             if let data = snapshot.value as? Dictionary< String, AnyObject>{
                 url = (data["userImg"] as? String)!
+                self.userImg.imageURL = url
+                if let imageFromCache = self.imageCache.object(forKey: url as AnyObject){
+                    self.userImg.image = imageFromCache as? UIImage
+                    self.userImg.userID = userUID
+                    print("its in the cache!")
+                    return
+                }
+
                 let ref = Storage.storage().reference(forURL: url)
                 ref.getData(maxSize: 100000000, completion:{ (data,error) in
                     
                     print("are we here ")
                     if (error != nil){
-                        print("cell configuring")
                         print("couldn't get user img because !",error?.localizedDescription)
                     }
                     else{
@@ -57,9 +75,13 @@ class PostCell: UITableViewCell {
                         if let imgData = data {
                             
                             if let image = UIImage(data: imgData){
-                                
-                                self.userImg.image = image
-                                print("cell configured!")
+                                let CachedImage = image
+                                if self.userImg.imageURL == url{
+                                self.userImg.image = CachedImage
+                                self.userImg.userID = userUID
+                                }
+                                self.imageCache.setObject(CachedImage, forKey: url as AnyObject)
+
                             }
                         }
                     }
@@ -71,10 +93,7 @@ class PostCell: UITableViewCell {
         })
         
         
-        if url == ""{
-            print("yikess")
-            
-        }
+
         
     }
     
@@ -94,7 +113,6 @@ class PostCell: UITableViewCell {
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         if let date = dateFormatter.date(from: dateInString){
             let timeSincePost = date.timeAgoDisplay()
-            print("time since post: ", timeSincePost)
             self.datePosted.text = timeSincePost
         }
         //
@@ -114,10 +132,24 @@ class PostCell: UITableViewCell {
             if let _ = ConnectButton{
             ConnectButton.isHidden = true
             }
+            if let _ = MoreOptions{
+                MoreOptions.isHidden = false
+                print("more options is not hidden!")
+            }
         }
+        
+        else{
+            if let _ = ConnectButton{
+                ConnectButton.isHidden = false
+            }
+            if let _ = MoreOptions{
+            MoreOptions.isHidden = true
+                print("more options is hidden!")
 
+            }
+        }
     }
-    
+
 
     
     @IBAction func Liked(_ sender: AnyObject){
@@ -128,10 +160,17 @@ class PostCell: UITableViewCell {
             if let _ = snapshot.value as? NSNull {
                 self.post.AddLikes(AddLike: true)
                 likeRef.setValue(true)
+                var likes = Int(self.likesLabel.text!)!
+                likes += 1
+                self.likesLabel.text = "\(likes)"
+                
             }
             else{
                 self.post.AddLikes(AddLike: false)
                 likeRef.removeValue()
+                var likes = Int(self.likesLabel.text!)!
+                likes -= 1
+                self.likesLabel.text = "\(likes)"
             }
         })
         
@@ -178,6 +217,7 @@ class PostCell: UITableViewCell {
 
 
 }
+
 
 
 extension Date{

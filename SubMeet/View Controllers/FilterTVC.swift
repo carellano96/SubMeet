@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class FilterTVC: UITableViewController {
 
@@ -16,15 +17,21 @@ class FilterTVC: UITableViewController {
     @IBOutlet weak var MyLocationLabel: UILabel!
     @IBOutlet weak var MaxDistanceLabel: UILabel!
     @IBOutlet weak var Slider: UISlider!
+    var myLocation: CLLocation!
     var sliderValue: String!
     var isOn: Bool!
     var hasSpecificLocation = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchCountryAndCity(myLocation: myLocation)
+
         // Do any additional setup after loading the view.
     }
     
+    
+    
+
     override func viewWillAppear(_ animated: Bool) {
         
         UserDefaults.standard.set(Slider.value, forKey: "sliderValue")
@@ -42,6 +49,7 @@ class FilterTVC: UITableViewController {
             }
             return
         }
+        
         isOn = switchButton.isOn
         print("switch button is on:", isOn)
         checkIfOn(isOn: isOn)
@@ -54,6 +62,30 @@ class FilterTVC: UITableViewController {
             DistanceLabel.text = "\(Int(Slider.value)) mi"
 
         }
+        
+        
+
+        
+    }
+
+    
+    
+    func fetchCountryAndCity(myLocation: CLLocation){
+        print("fetching country!")
+        CLGeocoder().reverseGeocodeLocation(myLocation, completionHandler: {placemarks, error in
+            if error == nil {
+                print("no error, changing location")
+                if let city = placemarks?.first?.locality,
+                    let state = placemarks?.first?.administrativeArea{
+                    self.LocationLabel.text = "\(city), \(state)"
+                }
+                
+                
+            }
+            else{
+                print("error is not equal to nil!")
+            }
+        })
     }
     
     @IBAction func ChangeSwitchValue(_ sender: AnyObject){

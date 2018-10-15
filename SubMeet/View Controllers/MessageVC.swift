@@ -22,6 +22,7 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var firstCall = true
     var userUID = KeychainWrapper.standard.string(forKey: "uid")
     var messages: [Message!] = []
+    var userChosenID: String!
     override func viewDidAppear(_ animated: Bool) {
         self.navigationController?.tabBarItem.badgeValue = nil
         isVisible = true
@@ -30,6 +31,12 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     override func viewDidDisappear(_ animated: Bool) {
         isVisible = false
     }
+    
+    deinit{
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -37,20 +44,26 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         textField.delegate = self
         textField.returnKeyType = UIReturnKeyType.done
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         self.tableView.rowHeight = UITableViewAutomaticDimension
         
         self.tableView.estimatedRowHeight = 300        //first observe if theres any messages there
+        CreateMessageObserver()
+        CreateTitleButton()
+        //additional setup after loading the view.
+    }
+    
+    func CreateMessageObserver(){
         let MessageRef = Database.database().reference().child("chats").child(connectKey)
         MessageRef.observe(.value, with: {(snapshot) in
             if let snapshot = snapshot.children.allObjects as? [DataSnapshot]{
                 self.messages.removeAll()
                 for data in snapshot{
                     if let messageData = data.value as? Dictionary<String, AnyObject>{
-                    
+                        
                         let messageID = data.key
                         let message = Message(messageData: messageData, messageKey: messageID)
                         if let messageSenderID = messageData["senderID"] as? String{
@@ -60,9 +73,9 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                             else{
                                 message.isSelf = false
                                 if (self.isVisible){
-                                MessageRef.child(messageID).child("readByReciever").setValue(true)
+                                    MessageRef.child(messageID).child("readByReciever").setValue(true)
                                 }
-                                }
+                            }
                         }
                         self.messages.append(message)
                     }
@@ -73,14 +86,37 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 //configure cell
                 
             }
+            
             print("reloading!")
             self.tableView.reloadData()
             if self.messages.count > 0 {
-            self.tableView.scrollToRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, at: .bottom, animated: false)
-            //self.tableView.selectRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, animated: false, scrollPosition: .bottom)
+                self.tableView.scrollToRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, at: .bottom, animated: false)
+                //self.tableView.selectRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, animated: false, scrollPosition: .bottom)
             }
         })
-        // Do any additional setup after loading the view.
+    }
+    
+    func CreateTitleButton(){
+        let button = UIButton(type: .custom)
+        button.frame = CGRect(x: 0, y: 0, width: 150, height: 70)
+        if let _ = self.title {
+            button.titleLabel?.font = UIFont(name: "Helvetica", size: 25)
+            button.setTitle(self.title, for: .normal)
+        }
+        button.setTitleColor(.lightGray, for: UIControlState.highlighted)
+        button.addTarget(self, action: #selector(ClickTitleButton(sender:)), for: .touchUpInside)
+        self.navigationItem.titleView = button
+    }
+    
+    @objc func ClickTitleButton(sender: UIButton){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let vc: UserVC = storyboard.instantiateViewController(withIdentifier: "UserVC") as? UserVC{
+            vc.userID = userChosenID
+            vc.CancelButtonDisabled = false
+            self.present(vc, animated: true, completion: nil)
+            
+        }
+        
     }
     
     @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
@@ -90,8 +126,6 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             //self.tableView.selectRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, animated: false, scrollPosition: .bottom)
         }
     }
-    var desiredHeight: CGFloat!
-    var KeyBoardChangedHeight: CGFloat!
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
             print("now editing on keyboard!")
@@ -99,12 +133,9 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             print("keyboard",self.SendView.frame.origin.y)
-            let tabbar = self.view.frame.height - self.SendView.frame.origin.y
-            print("tabbar keyboard", tabbar)
-            print("tabbar desired height,",(self.view.frame.origin.y + tabbar))
+            let tabbar = self.view.frame.maxY - self.SendView.frame.maxY
             if (self.view.frame.origin.y) == 0{
-                self.view.translatesAutoresizingMaskIntoConstraints = true
-                self.view.frame.origin.y -= (keyboardSize.height-55)
+                self.view.frame.origin.y -= (keyboardSize.height-tabbar)
                 if self.messages.count > 0 {
                     self.tableView.scrollToRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, at: .bottom, animated: true)
                     //self.tableView.selectRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, animated: false, scrollPosition: .bottom)
@@ -115,14 +146,20 @@ class MessageVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             print("hide the keyboard!")
+
             if self.view.frame.origin.y != 0{
                 print("hide the keyboard")
                 self.view.frame.origin.y = 0
-                self.view.translatesAutoresizingMaskIntoConstraints = false
+                if self.messages.count > 0 {
+                    self.tableView.scrollToRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, at: .bottom, animated: true)
+                    //self.tableView.selectRow(at: NSIndexPath(row: self.messages.count-1, section: 0) as IndexPath, animated: false, scrollPosition: .bottom)
+                }
+
 
             }
         }
     }
+
 
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

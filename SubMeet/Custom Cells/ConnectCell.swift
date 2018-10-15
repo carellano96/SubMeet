@@ -27,18 +27,7 @@ class ConnectCell: UITableViewCell {
         NameLabel.text = "\(self.connect.username)"
         MessageLabel.text = "\(self.connect.userPost)"
         
-        let connectImgRef = Storage.storage().reference(forURL: self.connect.userImg)
-        connectImgRef.getData(maxSize: 100000000, completion: {(data, error) in
-            if error != nil {
-                print("couldn't retrieve image!", error?.localizedDescription)
-            }
-                 else {
-                    if let imgData = data {
-                        let image = UIImage(data: imgData)
-                        self.ConnectImage.image = image
-                    }
-                }
-        })
+        
         }
         
     

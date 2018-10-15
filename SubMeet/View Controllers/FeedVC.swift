@@ -26,6 +26,9 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
     var delegate = UIApplication.shared.delegate as! AppDelegate
     var isOn: Bool!
     var Handler: DatabaseHandle?
+    var PostChosen: Post!
+    var userChosen: String!
+    var NoInternet: NoInternetConnection!
 
     private let refreshControl = UIRefreshControl()
 
@@ -47,13 +50,11 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         let longitude = Double(UserDefaults.standard.string(forKey: "current_longitude")!)
         let latitude = Double(UserDefaults.standard.string(forKey: "current_latitude")!)
         if (longitude != nil && latitude != nil){
-            myLocation = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
-            print("My location is: ,", myLocation.latitude)
+            myLocation = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)        }
+            
         }
-        }
-        
-
     }
+
     
     override func viewWillAppear(_ animated: Bool) {
         let testIsOn = UserDefaults.standard.string(forKey: "isOn")
@@ -63,14 +64,15 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         else{
             isOn = Bool(testIsOn!)
         }
+
     }
+    
     
 
     
     
+    
     override func viewDidAppear(_ animated: Bool) {
-        print("i appeared!")
-        retrieveData()
         self.tableView.reloadData()
 
     }
@@ -90,14 +92,12 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
     
     @IBAction func segmentedClicked(_ sender: Any){
         isRecent = !isRecent
-        print("isRecent", isRecent)
         if (isRecent) {
             self.posts = self.posts.sorted(by: {$0.datePosted > $1.datePosted})
             self.tableView.reloadData()
         }
         else {
             self.posts = self.posts.sorted(by: { $0.likes > $1.likes})
-            print("now showing trending!")
             self.tableView.reloadData()
         }
         
@@ -115,21 +115,16 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                     if let messages = snapshot.children.allObjects as? [DataSnapshot]{
                         //each convo
                         for conversation in messages{
-                            print("specific message:",conversation)
                             if let convo = conversation.children.allObjects as? [DataSnapshot]{
                             
                             for message in convo {
                         if message.exists(){
                             if let messageData = message.value as? Dictionary<String, AnyObject>{
-                                print("got the message!",messageData)
                                 if (messageData["readByReciever"] as? Bool == false && messageData["senderID"] as? String != self.userUID)
                                 {
-                                    print("someone sent a message!")
                                     let messageVC1 = self.tabBarController?.tabBar.items?[2]
-                                    print("This type is:",type(of: messageVC1))
                                     if let tabbar = self.tabBarController?.tabBar.items?[2] as? UITabBarItem {
                                         tabbar.badgeValue = ""
-                                        print("changed the badge value!")
                                     }}}}}}
                     }
         }
@@ -138,6 +133,19 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
 
 
     func retrieveData(){
+        if !Reachability.Connection(){
+            NoInternet.configView(width: self.view.frame.width - 10, center: self.view.center, top: self.view.frame.minY - 40)
+            
+
+            self.view.addSubview(NoInternet)
+
+            return
+        }
+        else{
+            if self.view.subviews.contains(NoInternet){
+                NoInternet.removeView()
+            }
+        }
         let postRef = Database.database().reference().child("posts")
         postRef.observeSingleEvent(of: .value, with: {
             (snapshot) in
@@ -148,7 +156,6 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                 for data in snapshot {
                     if let postData = data.value as? Dictionary<String, AnyObject>{
                         let postKey = data.key
-                        print("data key is \(postKey)")
                         let post = Post(postKey: postKey, postData: postData)
                         if let commentData = postData["comments"] as? Dictionary<String, AnyObject>{
                             for comment in commentData{
@@ -157,7 +164,6 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                                 if let commentDict = comment.value as? Dictionary<String, AnyObject>{
                                     let CurrentComment = Comment(commentData: commentDict, commentKey: commentKey)
                                     post.comments.append(CurrentComment)
-                                        print("Congrats!")
                                         print(CurrentComment.comment)
                                     
                                 }
@@ -165,20 +171,15 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                             }
                         }
 
-                        print("isOn: \(isOn) and radius = \(radius)")
                         if !isOn && radius != nil {
-                            print("will compare radius")
                             postRef.child(postKey).child("location").observeSingleEvent(of: .value, with: {(snapshot) in
                                 if let locationData = snapshot.value as? Dictionary<String, AnyObject>{
                                     let longitude = locationData["longitude"] as? Double
                                     let latitude = locationData["latitude"] as? Double
-                                    print("longitude is ", longitude)
-                                    print("latitude is ", latitude)
                                     let postLocation = CLLocation(latitude: latitude!, longitude: longitude!)//
                                     print(self.myLocation.latitude)
                                     let myLocation = CLLocation(latitude: self.myLocation.latitude, longitude: self.myLocation.longitude)
                                    let radiusFloat = Float(radius!)
-                                    print("radiusFloat,", radiusFloat)
                                     
                                     if self.compareRadius(radius: Int(radiusFloat!), userLocation: myLocation, postLocation: postLocation){
                                         //if its true then add it
@@ -196,7 +197,6 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
                             self.posts.append(post)
                             print(post.userPost)
                         }
-                        print(self.posts.count," count!")
                     }
                 }
             }
@@ -206,13 +206,14 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
             else{
                 self.posts = self.posts.sorted(by: { $0.likes > $1.likes})
             }
+            
+            self.tableView.reloadData()
         })
     }
     
     
     
     func compareRadius(radius: Int, userLocation: CLLocation, postLocation: CLLocation) -> Bool{
-        print("here?")
         let distance = userLocation.distance(from: postLocation)
         let distanceInMiles = Int(distance/1609.344)
         print("distance in Miles from this is", distanceInMiles)
@@ -224,10 +225,11 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         return true
         
     }
+
     
     override func viewDidLoad() {
-        self.tableView.reloadData()
         super.viewDidLoad()
+        NoInternet = NoInternetConnection()
         tableView.delegate = self
         tableView.dataSource = self
         self.tabBarController?.delegate = self
@@ -236,9 +238,13 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         isRecent = true
         self.configureLocationManager()
         self.manager.startUpdatingLocation()
-
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        //self.tableView.rowHeight = UITableViewAutomaticDimension
+        //self.tableView.estimatedRowHeight = 132
+        
         // Do any additional setup after loading the view.
         retrieveData()
+        
         userUID = KeychainWrapper.standard.string(forKey: "uid")
         self.CheckforMessages()
         refreshControl.addTarget(self, action: #selector(fetchMessages(_sender:)), for: .valueChanged)
@@ -252,6 +258,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         else{
             tableView.addSubview(refreshControl)
         }
+
         
         
         // Do any additional setup after loading the view.
@@ -282,12 +289,79 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         if let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as? PostCell{
                 print("configuring cells")
                 cell.configCell(post: post)
-            self.checkforLikes(postKey: post.postKey)
+            cell.CommentButton.tag = indexPath.row
+            cell.ProfileButton.tag = indexPath.row
+            cell.MoreOptions.tag = indexPath.row
+            cell.CommentButton.addTarget(self, action: #selector(GoToComments(sender:)), for: .touchUpInside)
+            cell.ProfileButton.addTarget(self, action: #selector(GoToProfile(sender:)), for: .touchUpInside)
+            cell.MoreOptions.addTarget(self, action: #selector(MoreOptions(sender:)), for: .touchUpInside)
                 return cell
             }
         else{
         print("returning postcell")
         return PostCell()
+        }
+
+    }
+    
+    @objc func MoreOptions(sender: UIButton){
+        let row = sender.tag
+        let postKey = posts[row].postKey
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let action = UIAlertAction(title: "Delete", style: .destructive, handler: {_ in
+            self.DeleteAPost(postKey: postKey)
+            self.retrieveData()
+        })
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: {_ in
+            alert.dismiss(animated: true, completion: nil)
+        })
+        alert.addAction(action)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+    }
+    func DeleteAPost(postKey: String){
+        let postRef = Database.database().reference().child("posts").child(postKey)
+        postRef.removeValue()
+        
+    }
+
+    
+    @objc func GoToProfile(sender: UIButton){
+        let row = sender.tag
+        userChosen = posts[row].userID
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let vc: UserVC = storyboard.instantiateViewController(withIdentifier: "UserVC") as? UserVC{
+            vc.userID = userChosen
+            vc.CancelButtonDisabled = false
+            self.present(vc, animated: true, completion: nil)
+            
+        }
+        
+        
+    }
+    
+    @objc func GoToComments(sender: UIButton){
+        
+        let row = sender.tag
+        PostChosen = posts[row]
+        self.performSegue(withIdentifier: "toComments", sender: self)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toComments"{
+            let vc = segue.destination as? CommentsVC
+            if let _ = PostChosen{
+                vc?.comments = PostChosen.comments
+                vc?.postID = PostChosen.postKey
+            }
+            
+        }
+        else if segue.identifier == "toFilter"{
+            let myLocation = CLLocation(latitude: self.myLocation.latitude, longitude: self.myLocation.longitude)
+            let vc = segue.destination as? FilterTVC
+            vc?.myLocation = myLocation
+            
         }
     }
     
@@ -296,8 +370,14 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 132
+
+        return UITableViewAutomaticDimension
+        
     }
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 700
+    }
+
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         
@@ -310,31 +390,18 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         }
     }
     
-    func checkforLikes(postKey: String){
-        
-        Database.database().reference().child("posts").child(postKey).child("likes").observe(.value, with: {
-            (snapshot) in
-            
-        })
-        
-    }
+
     
     @IBAction func returnToFeed(_ sender: UIStoryboardSegue){
         retrieveData()
         self.tableView.reloadData()
     }
     
-    
-    
-        
-    
-    
-    
-    
-
-    
-
 
 }
+
+
+
+
 
 //create an IBAction that sends the comments to the viewcontroller, prepareforsegue relevant comment information

@@ -17,14 +17,19 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var SignIn: Bool = true
     var UserUID: String = ""
     var delegate = UIApplication.shared.delegate as! AppDelegate
+    var chosenTag: Int!
 
     @IBOutlet weak var PasswordField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         UsernameField.delegate = self
         PasswordField.delegate = self
+        UsernameField.tag = 0
+        PasswordField.tag = 1
         UsernameField.returnKeyType = UIReturnKeyType.done
         PasswordField.returnKeyType = UIReturnKeyType.done
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         // Do any additional setup after loading the view.
     }
@@ -32,6 +37,40 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        chosenTag = textField.tag
+    }
+    
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            print("chosenTag", chosenTag)
+            if chosenTag == 0 {
+                if (self.view.frame.origin.y) == 0{
+                    self.view.frame.origin.y -= ( UsernameField.frame.maxY - keyboardSize.height)
+                    
+                }
+            }
+            else{
+                if (self.view.frame.origin.y) == 0{
+                    self.view.frame.origin.y -= ( PasswordField.frame.maxY - keyboardSize.height)
+                    
+                }
+            }
+            
+        }
+    }
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            
+            if self.view.frame.origin.y != 0{
+                self.view.frame.origin.y = 0
+                
+                
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

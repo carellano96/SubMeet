@@ -15,6 +15,7 @@ import GeoFire
 class ComposeVC: UIViewController, UITextViewDelegate, CLLocationManagerDelegate {
     @IBOutlet weak var SubmitButton: UIButton!
     @IBOutlet weak var ComposeTextField: UITextView!
+    @IBOutlet weak var CountingCharactersLabel: UILabel!
     var locationManager: CLLocationManager!
     var locValue: CLLocationCoordinate2D!
     var geoFire: GeoFire!
@@ -25,6 +26,7 @@ class ComposeVC: UIViewController, UITextViewDelegate, CLLocationManagerDelegate
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        self.CountingCharactersLabel.text = "0/250"
     }
     
     
@@ -35,6 +37,23 @@ class ComposeVC: UIViewController, UITextViewDelegate, CLLocationManagerDelegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newLength = textView.text.utf16.count + text.utf16.count - range.length
+        CountingCharactersLabel.text = "\(newLength)/250"
+        if newLength > 250{
+            CountingCharactersLabel.textColor = .red
+            SubmitButton.isEnabled = false
+            SubmitButton.backgroundColor = #colorLiteral(red: 1, green: 0.7038844218, blue: 0.6882982546, alpha: 1)
+        }
+        else{
+            CountingCharactersLabel.textColor = .black
+            SubmitButton.isEnabled = true
+            SubmitButton.backgroundColor = #colorLiteral(red: 0.9921568627, green: 0.4980392157, blue: 0.4862745098, alpha: 1)
+
+        }
         return true
     }
     
