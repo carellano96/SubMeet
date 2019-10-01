@@ -41,7 +41,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
         if self.myLocation.longitude != locations.first?.coordinate.longitude && self.myLocation.latitude != locations.first?.coordinate.latitude{
         let newCoordinate: CLLocationCoordinate2D = updatedLocation.coordinate
         let usrDefaults:UserDefaults = UserDefaults.standard
-        
+        print("getting longitudes & Lats")
         usrDefaults.set("\(newCoordinate.latitude)", forKey: "current_latitude")
         usrDefaults.set("\(newCoordinate.longitude)", forKey: "current_longitude")
         usrDefaults.synchronize()
@@ -53,6 +53,7 @@ class FeedVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UIIm
             myLocation = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)        }
             
         }
+        print("my longitude is ", self.myLocation.longitude);
     }
 
     

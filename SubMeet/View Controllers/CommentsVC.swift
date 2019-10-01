@@ -11,6 +11,10 @@ import Firebase
 import SwiftKeychainWrapper
 
 class CommentsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var SendView: UIView!
@@ -71,7 +75,7 @@ class CommentsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         return comments.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+ /*   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let comment = comments[indexPath.row]
         if let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell") as? CommentCell{
             cell.configCell(comment: comment)
@@ -82,7 +86,7 @@ class CommentsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, 
             return CommentCell()
         }
         
-    }
+    }*/
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -132,6 +136,7 @@ class CommentsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 NoInternet.removeFromSuperview()
             }
         }
+        /*
         let CommentRef = Database.database().reference().child("posts").child(postID).child("comments")
         CommentRef.observeSingleEvent(of: .value, with: {(snapshot) in
             if let comments = snapshot.children.allObjects as? [DataSnapshot]{
@@ -152,7 +157,7 @@ class CommentsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, 
                 
             }
             self.tableView.reloadData()
-        })
+        })*/
         
     }
     

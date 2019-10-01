@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -22,7 +22,6 @@
 		0719053B21739A290016FC03 /* NoInternetConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0719053A21739A290016FC03 /* NoInternetConnection.swift */; };
 		074322C12167E3D200EEDB23 /* FilterTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074322C02167E3D200EEDB23 /* FilterTVC.swift */; };
 		0744B4F6216D760F001A6C87 /* CommentsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0744B4F5216D760F001A6C87 /* CommentsVC.swift */; };
-		0744B4F8216D7793001A6C87 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0744B4F7216D7793001A6C87 /* CommentCell.swift */; };
 		075033502150082600AA6077 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0750334F2150082600AA6077 /* SignUpVC.swift */; };
 		0750335221500B9C00AA6077 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0750335121500B9C00AA6077 /* FeedVC.swift */; };
 		07664059215551DC003A075F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07664058215551DC003A075F /* Post.swift */; };
@@ -45,6 +44,7 @@
 		07D06071216BB4820073CC46 /* SettingsTWC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06070216BB4820073CC46 /* SettingsTWC.swift */; };
 		07D06073216C042B0073CC46 /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */; };
 		07D06075216D08AE0073CC46 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D06074216D08AE0073CC46 /* Comment.swift */; };
+		0AA4271D2343EFD800D31F67 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4271C2343EFD800D31F67 /* CommentCell.swift */; };
 		85F19192F7D57B7A5471DBED /* Pods_SubMeet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2D3B646CC993505526B2DB3 /* Pods_SubMeet.framework */; };
 /* End PBXBuildFile section */
 
@@ -81,7 +81,6 @@
 		0719053A21739A290016FC03 /* NoInternetConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoInternetConnection.swift; sourceTree = "<group>"; };
 		074322C02167E3D200EEDB23 /* FilterTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTVC.swift; sourceTree = "<group>"; };
 		0744B4F5216D760F001A6C87 /* CommentsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsVC.swift; sourceTree = "<group>"; };
-		0744B4F7216D7793001A6C87 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		0750334F2150082600AA6077 /* SignUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		0750335121500B9C00AA6077 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		07664058215551DC003A075F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -108,6 +107,7 @@
 		07D06070216BB4820073CC46 /* SettingsTWC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTWC.swift; sourceTree = "<group>"; };
 		07D06072216C042B0073CC46 /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
 		07D06074216D08AE0073CC46 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		0AA4271C2343EFD800D31F67 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		D2D3B646CC993505526B2DB3 /* Pods_SubMeet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SubMeet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4659CB8A4964F6E82535613 /* Pods-SubMeet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SubMeet.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet.debug.xcconfig"; sourceTree = "<group>"; };
 		FC440038B6F64E0DC33ECDA3 /* Pods-SubMeet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SubMeet.release.xcconfig"; path = "Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet.release.xcconfig"; sourceTree = "<group>"; };
@@ -143,8 +143,8 @@
 			isa = PBXGroup;
 			children = (
 				0766405A215566C1003A075F /* PostCell.swift */,
-				0744B4F7216D7793001A6C87 /* CommentCell.swift */,
 				07163B88215FEEE200FE2EF9 /* ConnectCell.swift */,
+				0AA4271C2343EFD800D31F67 /* CommentCell.swift */,
 				07163B86215F3C2800FE2EF9 /* UserInfoCell.swift */,
 				07163B972160309300FE2EF9 /* MessageCell.swift */,
 			);
@@ -413,27 +413,16 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GeoFire/GeoFire.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SubMeet/Pods-SubMeet-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GeoFire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftKeychainWrapper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SubMeet/Pods-SubMeet-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SubMeet/Pods-SubMeet-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SubMeet/Pods-SubMeet-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7CDFB5C66EE15CBC3DC4F866 /* [CP] Check Pods Manifest.lock */ = {
@@ -484,12 +473,12 @@
 				0768ACCC214ADB70004E1B57 /* LoginViewController.swift in Sources */,
 				074322C12167E3D200EEDB23 /* FilterTVC.swift in Sources */,
 				07163B87215F3C2800FE2EF9 /* UserInfoCell.swift in Sources */,
+				0AA4271D2343EFD800D31F67 /* CommentCell.swift in Sources */,
 				0789254021520C66004D02F1 /* UserProfile.swift in Sources */,
 				075033502150082600AA6077 /* SignUpVC.swift in Sources */,
 				0768AC56214A0CDE004E1B57 /* AppDelegate.swift in Sources */,
 				07163B982160309300FE2EF9 /* MessageCell.swift in Sources */,
 				0744B4F6216D760F001A6C87 /* CommentsVC.swift in Sources */,
-				0744B4F8216D7793001A6C87 /* CommentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,7 +655,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 59S3NEYJ77;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SubMeet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -686,7 +675,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 59S3NEYJ77;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SubMeet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
